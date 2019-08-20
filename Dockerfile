@@ -16,6 +16,6 @@ COPY requirements.txt ./
 
 RUN pip install -r requirements.txt
 
-COPY relay_httpd.py .
+COPY gpio_httpd.py .
 
-ENTRYPOINT ["./relay_httpd.py"]
+ENTRYPOINT ["./gpio_httpd.py"]

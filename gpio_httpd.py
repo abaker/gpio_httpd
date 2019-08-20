@@ -10,22 +10,21 @@ from wsgiref.simple_server import make_server
 
 import falcon
 
-class Relay(object):
-    def __init__(self, **kwargs):
-        self.pin = kwargs['pin']
+class SetLow(object):
+    def on_post(self, req, resp, pin):
+        GPIO.setup(int(pin), GPIO.OUT)
+        duration = req.get_param_as_int("ms", min_value=1, required=True) / 1000.0
+        logging.debug("Set {0} to GPIO.LOW for {1} seconds".format(pin, duration))
+        GPIO.output(pin, GPIO.LOW)
+        time.sleep(duration)
+        logging.debug("Set {0} to GPIO.HIGH".format(pin))
+        GPIO.output(pin, GPIO.HIGH)
 
-    def on_post(self, req, resp, **kwargs):
-        logging.debug("activating relay")
-        GPIO.output(self.pin, GPIO.LOW)
-        time.sleep(0.25)
-        GPIO.output(self.pin, GPIO.HIGH)
-
-def main(pin, port):
+def main(port):
     GPIO.setmode(GPIO.BCM)
-    GPIO.setup(pin, GPIO.OUT)
 
     api = falcon.API()
-    api.add_route('/activate', Relay(pin=pin))
+    api.add_route('/{pin:int(num_digits=None,min=2,max=27)}/low', SetLow())
 
     with make_server('', port, api) as httpd:
         logging.debug('Serving on port %s' % port)
@@ -39,11 +38,10 @@ def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--debug", action='store_true', help="enable debug logging", required=False)
     parser.add_argument("--port", help="port", required=False, default=8080)
-    parser.add_argument("--pin", help="GPIO pin", type=int, required=True)
     return parser.parse_args()
 
 if __name__ == '__main__':
     args = parse_args()
     logging.basicConfig(level=('DEBUG' if args.debug else 'WARN'),
                         format='%(asctime)s:%(levelname)s:%(name)s: %(message)s')
-    main(pin=args.pin, port=args.port)
+    main(port=args.port)
