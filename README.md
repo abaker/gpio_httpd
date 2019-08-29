@@ -7,7 +7,7 @@ $ python gpio_httpd.py
 
 Running `curl -X POST http://localhost/17/low?ms=250` will set pin 17 to GPIO.LOW for 250 milliseconds
 
-Running `curl http://localhost/17` will return input value for pin 17, either 0 or 1
+Running `curl http://localhost/input/17` will return the result of GPIO.input(17)
 
 ### Docker
 

@@ -14,7 +14,7 @@ class GetPin(object):
     def on_get(self, req, resp, pin):
         GPIO.setup(pin, GPIO.IN)
         logging.debug("Get {0}".format(pin))
-        resp.body = str(1 if GPIO.input(pin) else 0)
+        resp.body = str(GPIO.input(pin))
         resp.status = falcon.HTTP_200
 
 class SetLow(object):
@@ -32,7 +32,7 @@ def main(port):
 
     api = falcon.API()
     api.add_route('/{pin:int(num_digits=None,min=2,max=27)}/low', SetLow())
-    api.add_route('/{pin:int(num_digits=None,min=2,max=27)}', GetPin())
+    api.add_route('/input/{pin:int(num_digits=None,min=2,max=27)}', GetPin())
 
     with make_server('', port, api) as httpd:
         logging.debug('Serving on port %s' % port)
