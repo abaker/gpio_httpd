@@ -10,9 +10,16 @@ from wsgiref.simple_server import make_server
 
 import falcon
 
+class GetPin(object):
+    def on_get(self, req, resp, pin):
+        GPIO.setup(pin, GPIO.IN)
+        logging.debug("Get {0}".format(pin))
+        resp.body = str(1 if GPIO.input(pin) else 0)
+        resp.status = falcon.HTTP_200
+
 class SetLow(object):
     def on_post(self, req, resp, pin):
-        GPIO.setup(int(pin), GPIO.OUT)
+        GPIO.setup(pin, GPIO.OUT)
         duration = req.get_param_as_int("ms", min_value=1, required=True) / 1000.0
         logging.debug("Set {0} to GPIO.LOW for {1} seconds".format(pin, duration))
         GPIO.output(pin, GPIO.LOW)
@@ -25,6 +32,7 @@ def main(port):
 
     api = falcon.API()
     api.add_route('/{pin:int(num_digits=None,min=2,max=27)}/low', SetLow())
+    api.add_route('/{pin:int(num_digits=None,min=2,max=27)}', GetPin())
 
     with make_server('', port, api) as httpd:
         logging.debug('Serving on port %s' % port)
