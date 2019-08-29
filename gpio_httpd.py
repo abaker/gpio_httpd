@@ -37,7 +37,7 @@ def main(port):
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--debug", action='store_true', help="enable debug logging", required=False)
-    parser.add_argument("--port", help="port", required=False, default=8080)
+    parser.add_argument("--port", help="port", required=False, default=80)
     return parser.parse_args()
 
 if __name__ == '__main__':

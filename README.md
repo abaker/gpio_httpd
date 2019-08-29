@@ -5,11 +5,11 @@ $ pip install -r requirements.txt
 $ python gpio_httpd.py
 ```
 
-Running `curl -X POST http://localhost:8080/17/low?ms=250` will set pin 17 to GPIO.LOW for 250 milliseconds
+Running `curl -X POST http://localhost/17/low?ms=250` will set pin 17 to GPIO.LOW for 250 milliseconds
 
 ### Docker
 
-`docker run --device "/dev/gpiomem" -p "8080:8080" bakerba/gpio_httpd`
+`docker run --device "/dev/gpiomem" -p "80:80" bakerba/gpio_httpd`
 
 ### Docker Compose
 
@@ -23,7 +23,7 @@ services:
     devices:
       - "/dev/gpiomem"
     ports:
-      - "8080:8080"
+      - "80:80"
 ```
 
 ### Usage
