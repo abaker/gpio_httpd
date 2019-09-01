@@ -45,11 +45,11 @@ def main(port):
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--debug", action='store_true', help="enable debug logging", required=False)
-    parser.add_argument("--port", help="port", required=False, default=80)
+    parser.add_argument("--port", help="port", required=False, default='80')
     return parser.parse_args()
 
 if __name__ == '__main__':
     args = parse_args()
     logging.basicConfig(level=('DEBUG' if args.debug else 'WARN'),
                         format='%(asctime)s:%(levelname)s:%(name)s: %(message)s')
-    main(port=args.port)
+    main(port=int(args.port))
