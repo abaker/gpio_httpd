@@ -1,0 +1,12 @@
+version: '3.3'
+
+services:
+  gpio_httpd:
+    image: bakerba/gpio_httpd
+    container_name: gpio_httpd
+    devices:
+      - "/dev/gpiomem"
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    command: '--debug --port 8080'
